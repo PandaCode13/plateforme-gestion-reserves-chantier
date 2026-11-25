@@ -1,4 +1,4 @@
-# Backend Teknosure
+# Backend du site de gestion de chantier
 
 API REST développée avec [FastAPI](https://fastapi.tiangolo.com/) et exécutée avec Python 3.13 ou supérieur.
 
