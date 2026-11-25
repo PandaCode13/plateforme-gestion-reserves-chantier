@@ -1,0 +1,49 @@
+name: gestion-chantier
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-gestion_chantier}
+      POSTGRES_USER: ${DATABASE_USER:-gestion_chantier}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-gestion-chantier-dev}
+    ports:
+      - "${DATABASE_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-gestion_chantier} -d ${DATABASE_NAME:-gestion_chantier}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    environment:
+      # Depuis le conteneur backend, PostgreSQL est joignable via le nom du service "db".
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME:-gestion_chantier}
+      DATABASE_USER: ${DATABASE_USER:-gestion_chantier}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-gestion-chantier-dev}
+      FRONTEND_ORIGINS: ${FRONTEND_ORIGINS:-http://localhost:3000}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
