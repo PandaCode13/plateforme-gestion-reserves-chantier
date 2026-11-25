@@ -46,6 +46,34 @@ npm run dev
 
 L'interface est disponible sur [http://localhost:3000](http://localhost:3000).
 
+## Lancement avec Docker
+
+Le fichier Compose se trouve dans `backend/docker-compose.yml`. Depuis la racine du projet, démarrez la base de données, l'API et le frontend avec :
+
+```powershell
+docker compose -f backend/docker-compose.yml up --build -d
+```
+
+Pour démarrer uniquement le backend et le frontend (Compose démarre aussi la base nécessaire au backend) :
+
+```powershell
+docker compose -f backend/docker-compose.yml up --build -d backend frontend
+```
+
+Le frontend utilise le port défini par `FRONTEND_PORT` dans `backend/.env` (3001 dans la configuration locale actuelle). L'API est disponible sur le port défini par `BACKEND_PORT` (8000 par défaut), avec sa documentation sur `/docs`.
+
+Afficher les logs :
+
+```powershell
+docker compose -f backend/docker-compose.yml logs -f
+```
+
+Arrêter les conteneurs :
+
+```powershell
+docker compose -f backend/docker-compose.yml down
+```
+
 ## Routes de l'API
 
 | Méthode | Route | Réponse |

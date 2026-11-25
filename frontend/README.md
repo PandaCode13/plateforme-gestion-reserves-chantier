@@ -16,6 +16,21 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Run with Docker Compose
+
+The Compose file is in `../backend`. From the `frontend` directory, start the frontend and its required backend and database services with:
+
+```powershell
+docker compose -f ..\backend\docker-compose.yml up --build -d backend frontend
+```
+
+The frontend is available at the port configured by `FRONTEND_PORT` in `backend/.env` (3001 in the current local configuration). To view logs or stop the containers:
+
+```powershell
+docker compose -f ..\backend\docker-compose.yml logs -f
+docker compose -f ..\backend\docker-compose.yml down
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
